@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String         @id @default(cuid())
+  name            String
+  email           String         @unique
+  passwordHash    String
+  proficiencyLevel String       @default("beginner")
+  createdAt       DateTime       @default(now())
+  wordProgress    WordProgress[]
+  reviewLogs      ReviewLog[]
+}
+
+model Word {
+  id           String         @id @default(cuid())
+  word         String         @unique
+  definition   String
+  example      String?
+  difficulty   String         @default("medium")
+  wordProgress WordProgress[]
+}
+
+model WordProgress {
+  id             String      @id @default(cuid())
+  userId         String
+  wordId         String
+  easeFactor     Float       @default(2.5)
+  interval       Int         @default(1)
+  repetitions    Int         @default(0)
+  nextReviewDate DateTime    @default(now())
+  mastered       Boolean     @default(false)
+  user           User        @relation(fields: [userId], references: [id])
+  word           Word        @relation(fields: [wordId], references: [id])
+
+  @@index([userId, nextReviewDate])
+}
+
+model ReviewLog {
+  id         String   @id @default(cuid())
+  userId     String
+  wordId     String
+  quality    Int
+  reviewedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
