@@ -1,14 +1,25 @@
+'use client';
+
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
+
+  function handleLogout() {
+    localStorage.removeItem('token');
+    document.cookie = 'token=; path=/; max-age=0';
+    router.push('/login');
+  }
+
   return (
     <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
       <Link href="/" className="flex items-center gap-2 text-xl font-bold text-indigo-400">
         <BookOpen size={24} />
         LexiFlow
       </Link>
-      <div className="flex gap-6 text-sm text-gray-300">
+      <div className="flex gap-6 text-sm text-gray-300 items-center">
         <Link href="/dashboard" className="hover:text-white">Dashboard</Link>
         <Link href="/review" className="hover:text-white">Review</Link>
         <Link href="/library" className="hover:text-white">Library</Link>
@@ -16,6 +27,12 @@ export default function Navbar() {
         <Link href="/login" className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1 rounded-lg">
           Login
         </Link>
+        <button
+          onClick={handleLogout}
+          className="border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white px-4 py-1 rounded-lg"
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );

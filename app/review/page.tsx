@@ -1,23 +1,60 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
-const words = [
-  { word: "Ephemeral", definition: "Lasting for a very short time.", example: "The ephemeral beauty of cherry blossoms." },
-  { word: "Perfidious", definition: "Deceitful and untrustworthy.", example: "His perfidious nature was revealed over time." },
-  { word: "Loquacious", definition: "Tending to talk a great deal.", example: "She was loquacious at every gathering." },
-];
+type Word = {
+  id: string;
+  word: string;
+  definition: string;
+  example?: string;
+};
 
 export default function ReviewPage() {
+  const [words, setWords] = useState<Word[]>([]);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const handleDifficulty = (level: string) => {
-    console.log(`Word: ${words[index].word} marked as ${level}`);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    fetch('/api/daily-words', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => res.json())
+      .then(data => {
+        setWords(data.words || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const handleDifficulty = async (quality: number) => {
+    const token = localStorage.getItem('token');
+    const word = words[index];
+    
+    await fetch(`/api/words/${word.id}/review`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ quality }),
+    });
+
     setFlipped(false);
-    if (index + 1 < words.length) setIndex((i) => i + 1);
-    else setDone(true);
+    if (index + 1 < words.length) {
+      setIndex(index + 1);
+    } else {
+      setDone(true);
+    }
   };
+
+  if (loading) return <div className="flex items-center justify-center min-h-screen">Loading cards...</div>;
+  if (words.length === 0) return <div className="flex items-center justify-center min-h-screen text-white">No words to review today!</div>;
 
   if (done) {
     return (
@@ -25,9 +62,12 @@ export default function ReviewPage() {
         <p className="text-5xl">🎉</p>
         <h2 className="text-3xl font-bold text-white">Session Complete!</h2>
         <p className="text-gray-400">You reviewed all {words.length} words. Great work!</p>
-        <a href="/dashboard" className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-semibold">
+        <button 
+          onClick={() => router.push('/dashboard')}
+          className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-semibold"
+        >
           Back to Dashboard
-        </a>
+        </button>
       </div>
     );
   }
@@ -40,7 +80,7 @@ export default function ReviewPage() {
           <span>Card {index + 1} of {words.length}</span>
         </div>
         <div className="w-full bg-gray-800 rounded-full h-2">
-          <div className="bg-indigo-500 h-2 rounded-full transition-all" style={{ width: `${(index / words.length) * 100}%` }} />
+          <div className="bg-indigo-500 h-2 rounded-full transition-all" style={{ width: `${((index + 1) / words.length) * 100}%` }} />
         </div>
       </div>
 
@@ -57,25 +97,26 @@ export default function ReviewPage() {
         ) : (
           <>
             <p className="text-lg text-gray-200 font-medium">{w.definition}</p>
-            <p className="text-sm text-gray-500 italic">&quot;{w.example}&quot;</p>
+            {w.example && <p className="text-sm text-gray-500 italic">&quot;{w.example}&quot;</p>}
           </>
         )}
       </div>
 
-      {/* Difficulty Buttons */}
+      {/* Quality Buttons 0-5 */}
       {flipped && (
-        <div className="flex gap-4">
-          {[
-            { label: "Hard", color: "bg-red-700 hover:bg-red-600" },
-            { label: "Medium", color: "bg-yellow-600 hover:bg-yellow-500" },
-            { label: "Easy", color: "bg-green-700 hover:bg-green-600" },
-          ].map((btn) => (
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+          {[0,1,2,3,4,5].map((quality) => (
             <button
-              key={btn.label}
-              onClick={() => handleDifficulty(btn.label)}
-              className={`${btn.color} text-white font-semibold px-6 py-3 rounded-xl`}
+              key={quality}
+              onClick={() => handleDifficulty(quality)}
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold text-white transition-all ${
+                quality === 0 ? 'bg-red-700 hover:bg-red-600' :
+                quality <= 2 ? 'bg-orange-600 hover:bg-orange-500' :
+                quality <= 4 ? 'bg-yellow-500 hover:bg-yellow-400' :
+                'bg-green-700 hover:bg-green-600'
+              }`}
             >
-              {btn.label}
+              {quality}
             </button>
           ))}
         </div>

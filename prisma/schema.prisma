@@ -30,19 +30,21 @@ model Word {
 }
 
 model WordProgress {
-  id             String      @id @default(cuid())
+  id             String   @id @default(cuid())
   userId         String
   wordId         String
-  easeFactor     Float       @default(2.5)
-  interval       Int         @default(1)
-  repetitions    Int         @default(0)
-  nextReviewDate DateTime    @default(now())
-  mastered       Boolean     @default(false)
-  user           User        @relation(fields: [userId], references: [id])
-  word           Word        @relation(fields: [wordId], references: [id])
+  easeFactor     Float    @default(2.5)
+  interval       Int      @default(0)
+  repetitions    Int      @default(0)
+  nextReviewDate DateTime @default(now())
 
+  user User @relation(fields: [userId], references: [id])
+  word Word @relation(fields: [wordId], references: [id])
+
+  @@unique([userId, wordId])
   @@index([userId, nextReviewDate])
 }
+
 
 model ReviewLog {
   id         String   @id @default(cuid())
