@@ -18,22 +18,30 @@ export async function GET(req: NextRequest) {
       take: 5,
     })
 
-    // 2. If less than 5, fill with new unseen words
+    // 2. Get all seen word IDs
     const seenWordIds = await prisma.wordProgress.findMany({
       where: { userId },
       select: { wordId: true },
     })
     const seenIds = seenWordIds.map(p => p.wordId)
 
+    // 3. Fill remaining slots with random unseen words
     const needed = 5 - dueWords.length
-    const newWords = needed > 0
-      ? await prisma.word.findMany({
-          where: { id: { notIn: seenIds.length > 0 ? seenIds : [''] } },
-          take: needed,
-        })
-      : []
+    let newWords: { id: string; word: string; definition: string; example: string | null }[] = []
 
-    // 3. Combine both
+    if (needed > 0) {
+      // Fetch a larger pool then shuffle
+      const pool = await prisma.word.findMany({
+        where: { id: { notIn: seenIds.length > 0 ? seenIds : [''] } },
+        take: 50,
+      })
+
+      // Shuffle the pool
+      const shuffled = pool.sort(() => Math.random() - 0.5)
+      newWords = shuffled.slice(0, needed)
+    }
+
+    // 4. Combine both
     const dueWordObjects = dueWords.map(p => p.word)
     const allWords = [...dueWordObjects, ...newWords]
 

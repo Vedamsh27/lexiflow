@@ -3,13 +3,21 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const router = useRouter();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setLoggedIn(!!token);
+  }, []);
 
   function handleLogout() {
     localStorage.removeItem('token');
     document.cookie = 'token=; path=/; max-age=0';
+    setLoggedIn(false);
     router.push('/login');
   }
 
@@ -24,15 +32,18 @@ export default function Navbar() {
         <Link href="/review" className="hover:text-white">Review</Link>
         <Link href="/library" className="hover:text-white">Library</Link>
         <Link href="/profile" className="hover:text-white">Profile</Link>
-        <Link href="/login" className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1 rounded-lg">
-          Login
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white px-4 py-1 rounded-lg"
-        >
-          Logout
-        </button>
+        {loggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white px-4 py-1 rounded-lg"
+          >
+            Logout
+          </button>
+        ) : (
+          <Link href="/login" className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1 rounded-lg">
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );
