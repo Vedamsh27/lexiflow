@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       where: { userId },
       select: { wordId: true },
     })
-    const seenIds = seenWordIds.map(p => p.wordId)
+    const seenIds = seenWordIds.map((p: { wordId: string }) => p.wordId)
 
     // 3. Fill remaining slots with random unseen words
     const needed = 5 - dueWords.length
