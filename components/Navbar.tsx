@@ -31,6 +31,8 @@ export default function Navbar() {
         <Link href="/dashboard" className="hover:text-white">Dashboard</Link>
         <Link href="/review" className="hover:text-white">Review</Link>
         <Link href="/library" className="hover:text-white">Library</Link>
+        <Link href="/quiz" className="hover:text-white">Quiz</Link>
+        <Link href="/chart" className="hover:text-white">Progress</Link>
         <Link href="/profile" className="hover:text-white">Profile</Link>
         {loggedIn ? (
           <button

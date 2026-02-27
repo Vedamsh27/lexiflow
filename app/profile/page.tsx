@@ -11,12 +11,23 @@ type Stats = {
   newWords: number;
 };
 
+type Badge = {
+  id: string;
+  label: string;
+  description: string;
+  icon: string;
+  required: number;
+  earned: boolean;
+};
+
 export default function ProfilePage() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+
     fetch('/api/profile', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -26,6 +37,12 @@ export default function ProfilePage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    fetch('/api/badges', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => res.json())
+      .then(data => setBadges(data.badges || []));
   }, []);
 
   if (loading) return (
@@ -88,6 +105,29 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Badges */}
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
+        <h2 className="text-lg font-semibold text-white">🏆 Badges</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {badges.map(badge => (
+            <div
+              key={badge.id}
+              className={`rounded-xl p-4 flex items-center gap-3 border ${
+                badge.earned
+                  ? 'bg-indigo-950 border-indigo-700'
+                  : 'bg-gray-800 border-gray-700 opacity-40'
+              }`}
+            >
+              <span className="text-3xl">{badge.icon}</span>
+              <div>
+                <p className="text-white font-semibold text-sm">{badge.label}</p>
+                <p className="text-gray-400 text-xs mt-0.5">{badge.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -51,12 +51,29 @@ async function fetchDefinition(word: string): Promise<{ definition: string; exam
     const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
     if (!res.ok) return null
     const data = await res.json()
-    const meaning = data[0]?.meanings?.[0]
-    const def = meaning?.definitions?.[0]
-    if (!def?.definition) return null
+    const meanings = data[0]?.meanings || []
+
+    // Prefer adjective > verb > noun > anything else
+    const preferred = ['adjective', 'verb', 'noun']
+    let best = null
+
+    for (const pos of preferred) {
+      const match = meanings.find((m: { partOfSpeech: string }) => m.partOfSpeech === pos)
+      if (match?.definitions?.[0]) {
+        best = match.definitions[0]
+        break
+      }
+    }
+
+    if (!best && meanings[0]?.definitions?.[0]) {
+      best = meanings[0].definitions[0]
+    }
+
+    if (!best?.definition) return null
+
     return {
-      definition: def.definition,
-      example: def.example || undefined,
+      definition: best.definition,
+      example: best.example || undefined,
     }
   } catch {
     return null
@@ -77,20 +94,23 @@ async function main() {
     }
 
     await prisma.word.upsert({
-      where: { word },
-      update: {},
-      create: {
-        word,
-        definition: result.definition,
-        example: result.example,
-      },
-    })
+  where: { word },
+  update: {
+    definition: result.definition,
+    example: result.example,
+  },
+  create: {
+    word,
+    definition: result.definition,
+    example: result.example,
+  },
+})
 
     console.log(`✅ Added: ${word}`)
     added++
 
     // Small delay to avoid rate limiting
-    await new Promise(r => setTimeout(r, 200))
+    await new Promise(r => setTimeout(r, 500))
   }
 
   console.log(`\n🎉 Done! Added: ${added}, Skipped: ${skipped}`)

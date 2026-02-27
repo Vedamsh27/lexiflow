@@ -36,7 +36,41 @@ export async function POST(
       create: { userId, wordId, easeFactor, interval, repetitions, nextReviewDate },
     })
 
-    return NextResponse.json({ nextReviewDate, interval, repetitions })
+    // --- Streak logic ---
+    const user = await prisma.user.findUnique({ where: { id: userId } })
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const lastReview = user?.lastReviewDate ? new Date(user.lastReviewDate) : null
+    if (lastReview) lastReview.setHours(0, 0, 0, 0)
+
+    const yesterday = new Date(today)
+    yesterday.setDate(today.getDate() - 1)
+
+    let newStreak = user?.streak ?? 0
+
+    if (!lastReview) {
+      newStreak = 1
+    } else if (lastReview.getTime() === today.getTime()) {
+      // already reviewed today, streak stays the same
+    } else if (lastReview.getTime() === yesterday.getTime()) {
+      newStreak = newStreak + 1
+    } else {
+      // missed a day, reset
+      newStreak = 1
+    }
+
+    await prisma.user.update({
+  where: { id: userId },
+  data: { streak: newStreak, lastReviewDate: new Date() },
+})
+
+await prisma.reviewLog.create({
+  data: { userId, wordId, quality },
+})
+    // --- End streak logic ---
+
+    return NextResponse.json({ nextReviewDate, interval, repetitions, streak: newStreak })
 
   } catch (error) {
     console.error('REVIEW ERROR:', error)

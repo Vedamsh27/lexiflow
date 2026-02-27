@@ -16,6 +16,8 @@ model User {
   passwordHash    String
   proficiencyLevel String       @default("beginner")
   createdAt       DateTime       @default(now())
+  streak         Int       @default(0)
+  lastReviewDate DateTime?
   wordProgress    WordProgress[]
   reviewLogs      ReviewLog[]
 }

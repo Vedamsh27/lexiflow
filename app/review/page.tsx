@@ -103,24 +103,25 @@ export default function ReviewPage() {
       </div>
 
       {/* Quality Buttons 0-5 */}
-      {flipped && (
-        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-          {[0,1,2,3,4,5].map((quality) => (
-            <button
-              key={quality}
-              onClick={() => handleDifficulty(quality)}
-              className={`flex-1 py-3 px-4 rounded-xl font-semibold text-white transition-all ${
-                quality === 0 ? 'bg-red-700 hover:bg-red-600' :
-                quality <= 2 ? 'bg-orange-600 hover:bg-orange-500' :
-                quality <= 4 ? 'bg-yellow-500 hover:bg-yellow-400' :
-                'bg-green-700 hover:bg-green-600'
-              }`}
-            >
-              {quality}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Quality Buttons */}
+{flipped && (
+  <div className="flex gap-3 w-full max-w-md">
+    {[
+      { label: 'Again', quality: 0, color: 'bg-red-700 hover:bg-red-600' },
+      { label: 'Hard', quality: 2, color: 'bg-orange-600 hover:bg-orange-500' },
+      { label: 'Good', quality: 4, color: 'bg-indigo-600 hover:bg-indigo-500' },
+      { label: 'Easy', quality: 5, color: 'bg-green-700 hover:bg-green-600' },
+    ].map(({ label, quality, color }) => (
+      <button
+        key={label}
+        onClick={() => handleDifficulty(quality)}
+        className={`flex-1 py-3 px-4 rounded-xl font-semibold text-white transition-all ${color}`}
+      >
+        {label}
+      </button>
+    ))}
+  </div>
+)}
     </div>
   );
 }
