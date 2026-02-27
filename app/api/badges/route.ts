@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     }
 
     const progress = await prisma.wordProgress.findMany({ where: { userId } })
-    const mastered = progress.filter(p => p.easeFactor >= 2.5).length
+    const mastered = progress.filter((p: { easeFactor: number }) => p.easeFactor >= 2.5).length
 
     const badges = BADGES.map(badge => ({
       ...badge,
