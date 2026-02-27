@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+type Progress = {
+  easeFactor: number;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const userId = verifyToken(req)
@@ -19,9 +23,9 @@ export async function GET(req: NextRequest) {
     })
 
     const totalWords = progress.length
-    const mastered = progress.filter(p => p.easeFactor >= 2.5).length
-    const learning = progress.filter(p => p.easeFactor >= 1.8 && p.easeFactor < 2.5).length
-    const newWords = progress.filter(p => p.easeFactor < 1.8).length
+    const mastered = progress.filter((p: Progress) => p.easeFactor >= 2.5).length
+    const learning = progress.filter((p: Progress) => p.easeFactor >= 1.8 && p.easeFactor < 2.5).length
+    const newWords = progress.filter((p: Progress) => p.easeFactor < 1.8).length
 
     return NextResponse.json({
       name: user?.name,

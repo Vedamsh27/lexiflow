@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+type ProgressWithWord = {
+  easeFactor: number;
+  nextReviewDate: Date;
+  word: {
+    id: string;
+    word: string;
+    definition: string;
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const userId = verifyToken(req)
@@ -9,13 +19,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Get all words the user has seen with their progress
     const progress = await prisma.wordProgress.findMany({
       where: { userId },
       include: { word: true },
     })
 
-    const words = progress.map(p => ({
+    const words = progress.map((p: ProgressWithWord) => ({
       id: p.word.id,
       word: p.word.word,
       definition: p.word.definition,
@@ -23,7 +32,6 @@ export async function GET(req: NextRequest) {
       nextReview: p.nextReviewDate,
     }))
 
-    // Sort alphabetically
     words.sort((a, b) => a.word.localeCompare(b.word))
 
     return NextResponse.json({ words })
