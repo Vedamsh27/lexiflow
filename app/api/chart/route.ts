@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
     const data = days.map(day => {
       const next = new Date(day)
       next.setDate(day.getDate() + 1)
-      const count = logs.filter(l => l.reviewedAt >= day && l.reviewedAt < next).length
+      const count = logs.filter((l: { reviewedAt: Date }) => l.reviewedAt >= day && l.reviewedAt < next).length
       return {
         date: day.toLocaleDateString('en-US', { weekday: 'short' }),
         count,
