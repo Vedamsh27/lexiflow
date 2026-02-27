@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
       nextReview: p.nextReviewDate,
     }))
 
-    words.sort((a, b) => a.word.localeCompare(b.word))
+    words.sort((a: { word: string }, b: { word: string }) => a.word.localeCompare(b.word))
 
     return NextResponse.json({ words })
 
