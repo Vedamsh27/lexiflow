@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 
+type WordProgress = {
+  word: {
+    id: string;
+    word: string;
+    definition: string;
+    example: string | null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   try {
     const userId = verifyToken(req)
@@ -30,19 +39,17 @@ export async function GET(req: NextRequest) {
     let newWords: { id: string; word: string; definition: string; example: string | null }[] = []
 
     if (needed > 0) {
-      // Fetch a larger pool then shuffle
       const pool = await prisma.word.findMany({
         where: { id: { notIn: seenIds.length > 0 ? seenIds : [''] } },
         take: 50,
       })
 
-      // Shuffle the pool
       const shuffled = pool.sort(() => Math.random() - 0.5)
       newWords = shuffled.slice(0, needed)
     }
 
     // 4. Combine both
-    const dueWordObjects = dueWords.map(p => p.word)
+    const dueWordObjects = dueWords.map((p: WordProgress) => p.word)
     const allWords = [...dueWordObjects, ...newWords]
 
     return NextResponse.json({ words: allWords, count: allWords.length })
