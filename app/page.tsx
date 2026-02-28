@@ -25,10 +25,10 @@ export default function LandingPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 mt-4 w-full sm:w-auto">
   <Link href="/register" className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
-    Start Learning →
+    🚀 Start Learning
   </Link>
   <Link href="/quiz" className="border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
-    Try a Quiz →
+    🧠 Try a Quiz
   </Link>
 </div>
       </div>

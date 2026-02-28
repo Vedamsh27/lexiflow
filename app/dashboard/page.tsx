@@ -49,8 +49,9 @@ export default function DashboardPage() {
     })
       .then(res => res.json())
       .then(data => setWordOfDay(data.word ?? null));
+
     fetch('/api/profile', {
-  headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
       .then(data => setTotalWords(data.totalWords ?? 0));
@@ -63,7 +64,9 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-6 px-4 py-6">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-white">Your Words for Today 👋</h1>
-        <p className="text-gray-400 mt-1 text-sm sm:text-base">You have {words.length} words to learn today.</p>
+        <p className="text-gray-400 mt-1 text-sm sm:text-base">
+          {reviewedToday ? "You're all done for today! 🎉" : `You have ${words.length} words to learn today.`}
+        </p>
       </div>
 
       {/* Stats */}
@@ -74,7 +77,7 @@ export default function DashboardPage() {
             <span className="hidden sm:inline">Due Today</span>
             <span className="sm:hidden">Due</span>
           </div>
-          <p className="text-xl sm:text-2xl font-extrabold text-white">{words.length}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-white">{reviewedToday ? 0 : words.length}</p>
         </div>
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-3 sm:p-5 flex flex-col gap-2">
           <div className="flex items-center gap-1 sm:gap-2 text-gray-400 text-xs sm:text-sm">
@@ -113,15 +116,27 @@ export default function DashboardPage() {
       )}
 
       {/* CTA */}
-      <div className="bg-indigo-900 border border-indigo-700 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-lg sm:text-xl font-bold text-white">Ready to review?</h3>
-          <p className="text-indigo-300 text-sm mt-1">{words.length} words are waiting.</p>
+      {!reviewedToday ? (
+        <div className="bg-indigo-900 border border-indigo-700 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-white">Ready to review?</h3>
+            <p className="text-indigo-300 text-sm mt-1">{words.length} words are waiting.</p>
+          </div>
+          <Link href="/review" className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl hover:bg-indigo-50 w-full sm:w-auto text-center">
+            Start Review →
+          </Link>
         </div>
-        <Link href="/review" className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl hover:bg-indigo-50 w-full sm:w-auto text-center">
-          Start Review →
-        </Link>
-      </div>
+      ) : (
+        <div className="bg-green-950 border border-green-700 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-white">🎉 All done for today!</h3>
+            <p className="text-green-300 text-sm mt-1">Come back tomorrow for new words.</p>
+          </div>
+          <Link href="/library" className="bg-white text-green-700 font-bold px-6 py-3 rounded-xl hover:bg-green-50 w-full sm:w-auto text-center">
+            Browse Library →
+          </Link>
+        </div>
+      )}
 
       {/* Word List */}
       <div>
