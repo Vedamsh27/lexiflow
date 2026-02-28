@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [reviewedToday, setReviewedToday] = useState(true);
   const [wordOfDay, setWordOfDay] = useState<Word | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalWords, setTotalWords] = useState(0);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -48,6 +49,11 @@ export default function DashboardPage() {
     })
       .then(res => res.json())
       .then(data => setWordOfDay(data.word ?? null));
+    fetch('/api/profile', {
+  headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => res.json())
+      .then(data => setTotalWords(data.totalWords ?? 0));
   }, []);
 
   if (loading) return <p className="text-white p-4">Loading...</p>;
@@ -76,7 +82,7 @@ export default function DashboardPage() {
             <span className="hidden sm:inline">Total Words</span>
             <span className="sm:hidden">Total</span>
           </div>
-          <p className="text-xl sm:text-2xl font-extrabold text-white">{words.length}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-white">{totalWords}</p>
         </div>
         <div className="bg-gray-900 border border-orange-800 rounded-2xl p-3 sm:p-5 flex flex-col gap-2">
           <div className="flex items-center gap-1 sm:gap-2 text-gray-400 text-xs sm:text-sm">
