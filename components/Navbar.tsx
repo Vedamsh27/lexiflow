@@ -43,7 +43,7 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <div className="hidden md:flex gap-6 text-sm text-gray-300 items-center">
-          {navLinks.map(link => (
+          {loggedIn && navLinks.map(link => (
             <Link key={link.href} href={link.href} className="hover:text-white">
               {link.label}
             </Link>
@@ -74,7 +74,7 @@ export default function Navbar() {
       {/* Mobile dropdown */}
       {menuOpen && (
         <div className="md:hidden mt-4 flex flex-col gap-3 text-sm text-gray-300 border-t border-gray-800 pt-4">
-          {navLinks.map(link => (
+          {loggedIn && navLinks.map(link => (
             <Link
               key={link.href}
               href={link.href}
