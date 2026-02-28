@@ -24,13 +24,13 @@ export default function LandingPage() {
           LexiFlow uses spaced repetition to schedule your reviews at the perfect time — so you remember more with less effort.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 mt-4 w-full sm:w-auto">
-          <Link href="/assessment" className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
-            Start Free Assessment
-          </Link>
-          <Link href="/dashboard" className="border border-gray-700 hover:border-gray-500 text-gray-300 px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
-            View Dashboard
-          </Link>
-        </div>
+  <Link href="/register" className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
+    Start Learning →
+  </Link>
+  <Link href="/quiz" className="border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
+    Try a Quiz →
+  </Link>
+</div>
       </div>
 
       {/* Features */}
