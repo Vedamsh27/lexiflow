@@ -57,12 +57,11 @@ export async function GET(req: NextRequest) {
 
     if (needed > 0) {
       const pool = await prisma.word.findMany({
-        where: {
-          id: { notIn: seenIds.length > 0 ? seenIds : [''] },
-          difficulty: { in: allowedDifficulties },
-        },
-        take: 50,
-      })
+  where: {
+    id: { notIn: seenIds.length > 0 ? seenIds : [''] },
+  },
+  take: 50,
+})
 
       const shuffled = pool.sort(() => Math.random() - 0.5)
       newWords = shuffled.slice(0, needed)
