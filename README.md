@@ -2,7 +2,9 @@
 
 > A vocabulary learning app powered by spaced repetition — learn smarter, not harder.
 
-🔗 **Live Demo:** [https://lexiflow.vercel.app](https://lexiflow.vercel.app)
+🔗 ## 🚀 Live Project
+**Production URL:**  
+https://lexiflow-gp88j4c2x-vedamsh27s-projects.vercel.app/
 
 ---
 
