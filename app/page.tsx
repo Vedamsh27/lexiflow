@@ -27,8 +27,8 @@ export default function LandingPage() {
   <Link href="/register" className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
     🚀 Start Learning
   </Link>
-  <Link href="/quiz" className="border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
-    🧠 Try a Quiz
+  <Link href="/login" className="border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
+  Already a member? Login
   </Link>
 </div>
       </div>
