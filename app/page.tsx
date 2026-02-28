@@ -10,36 +10,36 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="flex flex-col items-center text-center gap-12 py-12">
+    <div className="flex flex-col items-center text-center gap-12 py-8 px-4">
       {/* Hero */}
       <div className="flex flex-col items-center gap-4">
         <span className="bg-indigo-900 text-indigo-300 text-sm px-4 py-1 rounded-full">
           Adaptive Learning Engine
         </span>
-        <h1 className="text-5xl font-extrabold text-white leading-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
           Learn Vocabulary<br />
           <span className="text-indigo-400">That Actually Sticks</span>
         </h1>
-        <p className="text-gray-400 max-w-lg text-lg">
+        <p className="text-gray-400 max-w-lg text-base sm:text-lg">
           LexiFlow uses spaced repetition to schedule your reviews at the perfect time — so you remember more with less effort.
         </p>
-        <div className="flex gap-4 mt-4">
-          <Link href="/assessment" className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold text-lg">
+        <div className="flex flex-col sm:flex-row gap-3 mt-4 w-full sm:w-auto">
+          <Link href="/assessment" className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
             Start Free Assessment
           </Link>
-          <Link href="/dashboard" className="border border-gray-700 hover:border-gray-500 text-gray-300 px-6 py-3 rounded-xl font-semibold text-lg">
+          <Link href="/dashboard" className="border border-gray-700 hover:border-gray-500 text-gray-300 px-6 py-3 rounded-xl font-semibold text-base sm:text-lg text-center">
             View Dashboard
           </Link>
         </div>
       </div>
 
       {/* Features */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
         {features.map((f, i) => (
-          <div key={i} className="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-left flex gap-4">
-            <div className="text-indigo-400 mt-1">{f.icon}</div>
+          <div key={i} className="bg-gray-900 border border-gray-800 rounded-2xl p-5 text-left flex gap-4">
+            <div className="text-indigo-400 mt-1 shrink-0">{f.icon}</div>
             <div>
-              <h3 className="font-bold text-white text-lg">{f.title}</h3>
+              <h3 className="font-bold text-white text-base sm:text-lg">{f.title}</h3>
               <p className="text-gray-400 text-sm mt-1">{f.desc}</p>
             </div>
           </div>

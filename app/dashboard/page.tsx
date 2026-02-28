@@ -50,74 +50,79 @@ export default function DashboardPage() {
       .then(data => setWordOfDay(data.word ?? null));
   }, []);
 
-  if (loading) return <p className="text-white p-8">Loading...</p>;
-  if (error) return <p className="text-red-400 p-8">{error}</p>;
+  if (loading) return <p className="text-white p-4">Loading...</p>;
+  if (error) return <p className="text-red-400 p-4">{error}</p>;
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6 px-4 py-6">
       <div>
-        <h1 className="text-3xl font-bold text-white">Your Words for Today 👋</h1>
-        <p className="text-gray-400 mt-1">You have {words.length} words to learn today.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Your Words for Today 👋</h1>
+        <p className="text-gray-400 mt-1 text-sm sm:text-base">You have {words.length} words to learn today.</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-gray-400 text-sm">
-            <BookOpen className="text-indigo-400" size={22} /> Due Today
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-3 sm:p-5 flex flex-col gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 text-gray-400 text-xs sm:text-sm">
+            <BookOpen className="text-indigo-400 shrink-0" size={18} />
+            <span className="hidden sm:inline">Due Today</span>
+            <span className="sm:hidden">Due</span>
           </div>
-          <p className="text-2xl font-extrabold text-white">{words.length}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-white">{words.length}</p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-gray-400 text-sm">
-            <TrendingUp className="text-green-400" size={22} /> Total Words
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-3 sm:p-5 flex flex-col gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 text-gray-400 text-xs sm:text-sm">
+            <TrendingUp className="text-green-400 shrink-0" size={18} />
+            <span className="hidden sm:inline">Total Words</span>
+            <span className="sm:hidden">Total</span>
           </div>
-          <p className="text-2xl font-extrabold text-white">{words.length}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-white">{words.length}</p>
         </div>
-        <div className="bg-gray-900 border border-orange-800 rounded-2xl p-5 flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-gray-400 text-sm">
-            <Flame className="text-orange-400" size={22} /> Streak
+        <div className="bg-gray-900 border border-orange-800 rounded-2xl p-3 sm:p-5 flex flex-col gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 text-gray-400 text-xs sm:text-sm">
+            <Flame className="text-orange-400 shrink-0" size={18} />
+            <span>Streak</span>
           </div>
-          <p className="text-2xl font-extrabold text-white">{streak} {streak === 1 ? 'day' : 'days'}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-white">{streak}<span className="text-sm sm:hidden">d</span><span className="hidden sm:inline"> {streak === 1 ? 'day' : 'days'}</span></p>
         </div>
       </div>
 
       {/* Streak Warning */}
       {streak > 0 && !reviewedToday && (
-        <div className="bg-red-950 border border-red-700 rounded-2xl p-4 flex items-center gap-3">
-          <Flame className="text-red-400 shrink-0" size={22} />
-          <p className="text-red-300 font-medium">Review today or you'll lose your {streak}-day streak!</p>
+        <div className="bg-red-950 border border-red-700 rounded-2xl p-4 flex items-start gap-3">
+          <Flame className="text-red-400 shrink-0 mt-0.5" size={20} />
+          <p className="text-red-300 font-medium text-sm sm:text-base">Review today or you'll lose your {streak}-day streak!</p>
         </div>
       )}
 
       {/* Word of the Day */}
       {wordOfDay && (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 sm:p-6">
           <div className="flex items-center gap-2 text-indigo-400 text-sm font-semibold mb-3">
-            <Star size={18} /> WORD OF THE DAY
+            <Star size={16} /> WORD OF THE DAY
           </div>
-          <p className="text-2xl font-extrabold text-white">{wordOfDay.word}</p>
-          <p className="text-gray-300 mt-2">{wordOfDay.definition}</p>
+          <p className="text-xl sm:text-2xl font-extrabold text-white">{wordOfDay.word}</p>
+          <p className="text-gray-300 mt-2 text-sm sm:text-base">{wordOfDay.definition}</p>
         </div>
       )}
 
       {/* CTA */}
-      <div className="bg-indigo-900 border border-indigo-700 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-indigo-900 border border-indigo-700 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-xl font-bold text-white">Ready to review?</h3>
+          <h3 className="text-lg sm:text-xl font-bold text-white">Ready to review?</h3>
           <p className="text-indigo-300 text-sm mt-1">{words.length} words are waiting.</p>
         </div>
-        <Link href="/review" className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl hover:bg-indigo-50">
+        <Link href="/review" className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl hover:bg-indigo-50 w-full sm:w-auto text-center">
           Start Review →
         </Link>
       </div>
 
       {/* Word List */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">📚 Today's Words</h2>
+        <h2 className="text-lg sm:text-xl font-bold text-white mb-4">📚 Today's Words</h2>
         <div className="flex flex-col gap-3">
           {words.map((w) => (
-            <div key={w.id} className="bg-gray-900 border border-gray-800 rounded-xl px-5 py-4">
+            <div key={w.id} className="bg-gray-900 border border-gray-800 rounded-xl px-4 sm:px-5 py-4">
               <p className="font-semibold text-white">{w.word}</p>
               <p className="text-sm text-gray-400 mt-1">{w.definition}</p>
             </div>

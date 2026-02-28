@@ -47,16 +47,19 @@ export default function QuizPage() {
     }
   };
 
-  if (loading) return <p className="text-white p-8">Loading quiz...</p>;
+  if (loading) return <p className="text-white p-4">Loading quiz...</p>;
 
   if (finished) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 px-4 text-center">
       <p className="text-5xl">🎉</p>
-      <h1 className="text-3xl font-bold text-white">Quiz Complete!</h1>
-      <p className="text-gray-400 text-lg">You scored <span className="text-indigo-400 font-bold">{score}</span> out of <span className="text-white font-bold">{questions.length}</span></p>
-      <div className="flex gap-4">
+      <h1 className="text-2xl sm:text-3xl font-bold text-white">Quiz Complete!</h1>
+      <p className="text-gray-400 text-base sm:text-lg">
+        You scored <span className="text-indigo-400 font-bold">{score}</span> out of <span className="text-white font-bold">{questions.length}</span>
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <button
-          onClick={() => { setCurrent(0); setScore(0); setSelected(null); setFinished(false); setLoading(true);
+          onClick={() => {
+            setCurrent(0); setScore(0); setSelected(null); setFinished(false); setLoading(true);
             const token = localStorage.getItem('token');
             fetch('/api/quiz', { headers: { Authorization: `Bearer ${token}` } })
               .then(res => res.json())
@@ -66,7 +69,7 @@ export default function QuizPage() {
         >
           Play Again
         </button>
-        <Link href="/dashboard" className="bg-gray-800 text-white font-bold px-6 py-3 rounded-xl hover:bg-gray-700">
+        <Link href="/dashboard" className="bg-gray-800 text-white font-bold px-6 py-3 rounded-xl hover:bg-gray-700 text-center">
           Dashboard
         </Link>
       </div>
@@ -76,9 +79,9 @@ export default function QuizPage() {
   const q = questions[current];
 
   return (
-    <div className="flex flex-col gap-8 max-w-xl mx-auto">
+    <div className="flex flex-col gap-6 max-w-xl mx-auto px-4 py-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-white">📝 Quiz</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">📝 Quiz</h1>
         <span className="text-gray-400 text-sm">{current + 1} / {questions.length}</span>
       </div>
 
@@ -91,13 +94,13 @@ export default function QuizPage() {
       </div>
 
       {/* Question */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 sm:p-6">
         <p className="text-sm text-gray-400 mb-2">What word matches this definition?</p>
-        <p className="text-white text-lg font-medium">{q.definition}</p>
+        <p className="text-white text-base sm:text-lg font-medium">{q.definition}</p>
       </div>
 
       {/* Choices */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {q.choices.map(choice => {
           let style = 'bg-gray-900 border-gray-700 text-white hover:border-indigo-500';
           if (selected) {

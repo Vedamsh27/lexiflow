@@ -27,7 +27,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     fetch('/api/profile', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -52,47 +51,45 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6 px-4 py-6">
       <div>
-        <h1 className="text-3xl font-bold text-white">Profile</h1>
-        <p className="text-gray-400 mt-1">Your account and progress.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Profile</h1>
+        <p className="text-gray-400 mt-1 text-sm sm:text-base">Your account and progress.</p>
       </div>
 
       {/* Account Info */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-white">Account Info</h2>
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 sm:p-6 flex flex-col gap-4">
+        <h2 className="text-base sm:text-lg font-semibold text-white">Account Info</h2>
         <div className="flex flex-col gap-1">
           <span className="text-sm text-gray-400">Name</span>
           <span className="text-white font-medium">{stats?.name || '—'}</span>
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-sm text-gray-400">Email</span>
-          <span className="text-white font-medium">{stats?.email || '—'}</span>
+          <span className="text-white font-medium break-all">{stats?.email || '—'}</span>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-white">Your Stats</h2>
-
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="bg-gray-800 rounded-xl p-4">
-            <p className="text-2xl font-bold text-white">{stats?.totalWords || 0}</p>
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 sm:p-6 flex flex-col gap-4">
+        <h2 className="text-base sm:text-lg font-semibold text-white">Your Stats</h2>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+          <div className="bg-gray-800 rounded-xl p-3 sm:p-4">
+            <p className="text-xl sm:text-2xl font-bold text-white">{stats?.totalWords || 0}</p>
             <p className="text-xs text-gray-400 mt-1">Total Seen</p>
           </div>
-          <div className="bg-gray-800 rounded-xl p-4">
-            <p className="text-2xl font-bold text-green-400">{stats?.mastered || 0}</p>
+          <div className="bg-gray-800 rounded-xl p-3 sm:p-4">
+            <p className="text-xl sm:text-2xl font-bold text-green-400">{stats?.mastered || 0}</p>
             <p className="text-xs text-gray-400 mt-1">Mastered</p>
           </div>
-          <div className="bg-gray-800 rounded-xl p-4">
-            <p className="text-2xl font-bold text-yellow-400">{stats?.learning || 0}</p>
+          <div className="bg-gray-800 rounded-xl p-3 sm:p-4">
+            <p className="text-xl sm:text-2xl font-bold text-yellow-400">{stats?.learning || 0}</p>
             <p className="text-xs text-gray-400 mt-1">Learning</p>
           </div>
         </div>
 
-        {/* Mastery progress bar */}
         {stats && stats.totalWords > 0 && (
-          <div className="flex flex-col gap-2 mt-2">
+          <div className="flex flex-col gap-2 mt-1">
             <div className="flex justify-between text-sm text-gray-400">
               <span>Overall Mastery</span>
               <span>{Math.round((stats.mastered / stats.totalWords) * 100)}%</span>
@@ -108,9 +105,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Badges */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-white">🏆 Badges</h2>
-        <div className="grid grid-cols-2 gap-3">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 sm:p-6 flex flex-col gap-4">
+        <h2 className="text-base sm:text-lg font-semibold text-white">🏆 Badges</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {badges.map(badge => (
             <div
               key={badge.id}
@@ -120,7 +117,7 @@ export default function ProfilePage() {
                   : 'bg-gray-800 border-gray-700 opacity-40'
               }`}
             >
-              <span className="text-3xl">{badge.icon}</span>
+              <span className="text-2xl sm:text-3xl">{badge.icon}</span>
               <div>
                 <p className="text-white font-semibold text-sm">{badge.label}</p>
                 <p className="text-gray-400 text-xs mt-0.5">{badge.description}</p>
