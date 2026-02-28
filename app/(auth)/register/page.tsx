@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,12 +29,14 @@ export default function RegisterPage() {
       return;
     }
 
-    // After successful register, go to login so user can sign in
-    router.push('/login');
+    // Save token and go straight to assessment
+    localStorage.setItem('token', data.token);
+    document.cookie = `token=${data.token}; path=/; max-age=604800`;
+    window.location.href = '/assessment';
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh]">
+    <div className="flex items-center justify-center min-h-[80vh] px-4">
       <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-md flex flex-col gap-6">
         <div>
           <h2 className="text-2xl font-bold text-white">Create your account</h2>

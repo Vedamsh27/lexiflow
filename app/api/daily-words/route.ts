@@ -8,6 +8,7 @@ type WordProgress = {
     word: string;
     definition: string;
     example: string | null;
+    difficulty: string;
   }
 }
 
@@ -17,6 +18,22 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Get user's level
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { proficiencyLevel: true },
+    })
+
+    const level = user?.proficiencyLevel || 'beginner'
+
+    // Map level to difficulty filter
+    const difficultyMap: Record<string, string[]> = {
+      beginner: ['easy'],
+      intermediate: ['easy', 'medium'],
+      advanced: ['easy', 'medium', 'hard'],
+    }
+    const allowedDifficulties = difficultyMap[level] || ['easy']
 
     const today = new Date()
 
@@ -34,13 +51,16 @@ export async function GET(req: NextRequest) {
     })
     const seenIds = seenWordIds.map((p: { wordId: string }) => p.wordId)
 
-    // 3. Fill remaining slots with random unseen words
+    // 3. Fill remaining slots with unseen words matching level
     const needed = 5 - dueWords.length
-    let newWords: { id: string; word: string; definition: string; example: string | null }[] = []
+    let newWords: { id: string; word: string; definition: string; example: string | null; difficulty: string }[] = []
 
     if (needed > 0) {
       const pool = await prisma.word.findMany({
-        where: { id: { notIn: seenIds.length > 0 ? seenIds : [''] } },
+        where: {
+          id: { notIn: seenIds.length > 0 ? seenIds : [''] },
+          difficulty: { in: allowedDifficulties },
+        },
         take: 50,
       })
 
